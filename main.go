@@ -103,7 +103,23 @@ func run() {
 }
 
 func main() {
+	// Start querying the upstream API
 	go run()
+
+	// Get listening interface address
+	addr := getListenAddr()
+	fmt.Println("Starting server on", addr)
+
+	// Listen for requests
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(addr, nil)
+}
+
+func getListenAddr() string {
+	val := os.Getenv("FEEPROXY_INTERFACE")
+	if val == "" {
+		return ":8080"
+	}
+
+	return val
 }
