@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
+
+	"github.com/gocraft/health"
 )
 
 const api string = "https://bitcoinfees.21.co/api/v1/fees/list"
@@ -31,7 +34,6 @@ type FeeCache struct {
 
 var cache string
 var httpClient http.Client = http.Client{Timeout: time.Second * 10}
-var lastSuccessfulQuery time.Time
 
 func Query() error {
 	resp, err := httpClient.Get(api)
@@ -44,6 +46,7 @@ func Query() error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	low := FeeLevel{MaxDelay: 0}
 	medium := FeeLevel{MaxDelay: 0}
@@ -69,7 +72,6 @@ func Query() error {
 		return err
 	}
 	cache = string(out)
-	lastSuccessfulQuery = time.Now()
 	return nil
 }
 
@@ -78,17 +80,46 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func run() {
+	// Create instrumentation stream
+	stream := health.NewStream()
+	stream.AddSink(&health.WriterSink{os.Stdout})
+	stream.Event("starting")
+
+	// Create an update ticker and update fees on each tick
 	t := time.NewTicker(time.Second * 30)
 	for ; true; <-t.C {
+
+		// Query the upstream API
+		job := stream.NewJob("query")
 		err := Query()
-		if err != nil && time.Since(lastSuccessfulQuery) > time.Minute*10 {
-			// Send a notification or something
+		if err == nil {
+			job.Complete(health.Success)
+			continue
 		}
+
+		job.EventErr("query", err)
+		job.Complete(health.Error)
 	}
 }
 
 func main() {
+	// Start querying the upstream API
 	go run()
+
+	// Get listening interface address
+	addr := getListenAddr()
+	fmt.Println("Starting server on", addr)
+
+	// Listen for requests
 	http.HandleFunc("/", handler)
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(addr, nil)
+}
+
+func getListenAddr() string {
+	val := os.Getenv("FEEPROXY_INTERFACE")
+	if val == "" {
+		return ":8080"
+	}
+
+	return val
 }
