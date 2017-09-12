@@ -46,6 +46,7 @@ func Query() error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	low := FeeLevel{MaxDelay: 0}
 	medium := FeeLevel{MaxDelay: 0}
