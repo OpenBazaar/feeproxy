@@ -67,6 +67,17 @@ func Query() error {
 		Normal:   (medium.MaxFee + medium.MinFee) / 2,
 		Economic: (low.MaxFee + low.MinFee) / 2,
 	}
+
+	if feeCache.Priority == 0 {
+		feeCache.Priority = 1
+	}
+	if feeCache.Normal == 0 {
+		feeCache.Normal = 1
+	}
+	if feeCache.Economic == 0 {
+		feeCache.Economic = 1
+	}
+
 	out, err := json.Marshal(&feeCache)
 	if err != nil {
 		return err
