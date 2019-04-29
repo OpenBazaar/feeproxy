@@ -2,14 +2,88 @@
 
 
 [[projects]]
+  digest = "1:5c992c090e2515ba4e1b877a914aee2952f35e8759b88a30a6dc7e8b2d684d96"
+  name = "github.com/aws/aws-lambda-go"
+  packages = [
+    "lambda",
+    "lambda/handlertrace",
+    "lambda/messages",
+    "lambdacontext",
+  ]
+  pruneopts = ""
+  revision = "c83699c938a36c6d111f9837be9295184efeeb2e"
+  version = "v1.9.0"
+
+[[projects]]
+  digest = "1:2b993c6656f5d565326e92b3c18980265ef038cf1116ce37f23335402f87d4fc"
+  name = "github.com/aws/aws-sdk-go"
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client",
+    "aws/client/metadata",
+    "aws/corehandlers",
+    "aws/credentials",
+    "aws/credentials/ec2rolecreds",
+    "aws/credentials/endpointcreds",
+    "aws/credentials/processcreds",
+    "aws/credentials/stscreds",
+    "aws/csm",
+    "aws/defaults",
+    "aws/ec2metadata",
+    "aws/endpoints",
+    "aws/request",
+    "aws/session",
+    "aws/signer/v4",
+    "internal/ini",
+    "internal/s3err",
+    "internal/sdkio",
+    "internal/sdkrand",
+    "internal/sdkuri",
+    "internal/shareddefaults",
+    "private/protocol",
+    "private/protocol/eventstream",
+    "private/protocol/eventstream/eventstreamapi",
+    "private/protocol/query",
+    "private/protocol/query/queryutil",
+    "private/protocol/rest",
+    "private/protocol/restxml",
+    "private/protocol/xml/xmlutil",
+    "service/s3",
+    "service/sts",
+  ]
+  pruneopts = ""
+  revision = "b0b23985ea7533af9f94731b2c1030a1e46e6500"
+  version = "v1.18.2"
+
+[[projects]]
   branch = "master"
+  digest = "1:ab48f05d75a9689e72b4da3439a477929938bc6f5ed67b2771801d4740b22a61"
   name = "github.com/gocraft/health"
-  packages = [".","stack"]
+  packages = [
+    ".",
+    "stack",
+  ]
+  pruneopts = ""
   revision = "25b40f8580168c1f905a6dba35d471cdc51ca629"
+
+[[projects]]
+  digest = "1:13fe471d0ed891e8544eddfeeb0471fd3c9f2015609a1c000aefdedf52a19d40"
+  name = "github.com/jmespath/go-jmespath"
+  packages = ["."]
+  pruneopts = ""
+  revision = "c2b33e84"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5f410e9feaae04c93110a37c3ddcac2b193bd15a4c1c6a929bb71a6041fe7655"
+  input-imports = [
+    "github.com/aws/aws-lambda-go/lambda",
+    "github.com/aws/aws-sdk-go/aws",
+    "github.com/aws/aws-sdk-go/aws/session",
+    "github.com/aws/aws-sdk-go/service/s3",
+    "github.com/gocraft/health",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -1,4 +1,21 @@
 .DEFAULT_GOAL := help
+.PHONY: lambda deploy_lambda docker push_docker clean_docker clean help
+
+##
+## Lambda
+##
+LAMBDA_FILENAME ?= update_fee_estimate.zip
+LAMBDA_PATH ?= lambdas
+LAMBDA_DEPLOY_BUCKET ?= deploy-bucket
+
+lambda: ## Build lambda package
+	mkdir -p dist/lambda
+	go build -o dist/lambda/main ./lambda
+	cd dist/lambda && zip -r $(LAMBDA_FILENAME) main
+
+deploy_lambda: ## Deploy built lambda artifact
+	aws s3api put-object --bucket $(LAMBDA_DEPLOY_BUCKET) --key $(LAMBDA_PATH)/$(LAMBDA_FILENAME) --body dist/lambda/$(LAMBDA_FILENAME)
+
 
 ##
 ## Docker
