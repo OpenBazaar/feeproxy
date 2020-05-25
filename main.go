@@ -60,9 +60,9 @@ func Query() ([]byte, error) {
 	}
 
 	return json.Marshal(&responseData{
-		Priority:      feeData.Priority,
-		Normal:        feeData.Normal,
-		Economic:      feeData.Economic,
+		Priority:      superData.Limits.Max,
+		Normal:        superData.Priority,
+		Economic:      superData.Regular,
 		SuperEconomic: superData.Limits.Min,
 	})
 }
