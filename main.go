@@ -27,9 +27,9 @@ type sourceDataBCI struct {
 }
 
 type responseData struct {
-	Priority int `json:"priority"`
-	Normal   int `json:"normal"`
-	Economic int `json:"economic"`
+	Priority      int `json:"priority"`
+	Normal        int `json:"normal"`
+	Economic      int `json:"economic"`
 	SuperEconomic int `json:"superEconomic"`
 }
 
@@ -60,9 +60,9 @@ func Query() ([]byte, error) {
 	}
 
 	return json.Marshal(&responseData{
-		Priority: feeData.Priority,
-		Normal:   feeData.Normal,
-		Economic: feeData.Economic,
-		SuperEconomic: superData.Regular,
+		Priority:      feeData.Priority,
+		Normal:        feeData.Normal,
+		Economic:      feeData.Economic,
+		SuperEconomic: superData.Limits.Min,
 	})
 }
